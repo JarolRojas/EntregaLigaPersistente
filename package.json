@@ -1,0 +1,14 @@
+{
+  "name": "futbol-persistencia",
+  "version": "1.0.0",
+  "description": "Proyecto de Fútbol con Tailwind CSS",
+  "scripts": {
+    "build": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css",
+    "watch": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.0",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.16"
+  }
+}
