@@ -54,63 +54,69 @@ $equipos = $equipoDAO->obtenerTodos();
 
 <?php include '../templates/layout_header.php'; ?>
 
-<h2>Gestión de Equipos</h2>
+<h2 class="text-3xl font-bold text-gray-900 mb-6">Gestión de Equipos</h2>
 
 <?php if ($mensaje): ?>
-    <div class="alert alert-<?php echo $tipoMensaje; ?>">
+    <div class="mb-6 p-4 rounded-lg <?php echo $tipoMensaje === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'; ?>">
         <?php echo $mensaje; ?>
     </div>
 <?php endif; ?>
 
-<div class="card">
-    <h3>Agregar Nuevo Equipo</h3>
+<div class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <h3 class="text-xl font-semibold text-gray-900 mb-4">Agregar Nuevo Equipo</h3>
     <form method="POST" action="">
         <input type="hidden" name="action" value="crear">
 
-        <div class="form-group">
-            <label for="nombre">Nombre del Equipo *</label>
+        <div class="mb-4">
+            <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre del Equipo *</label>
             <input type="text" id="nombre" name="nombre" required maxlength="100"
-                placeholder="Ej: Real Madrid" value="<?php echo isset($_POST['nombre']) ? htmlspecialchars($_POST['nombre']) : ''; ?>">
+                placeholder="Ej: Real Madrid" 
+                value="<?php echo isset($_POST['nombre']) ? htmlspecialchars($_POST['nombre']) : ''; ?>"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
         </div>
 
-        <div class="form-group">
-            <label for="estadio">Estadio *</label>
+        <div class="mb-6">
+            <label for="estadio" class="block text-sm font-medium text-gray-700 mb-1">Estadio *</label>
             <input type="text" id="estadio" name="estadio" required maxlength="150"
-                placeholder="Ej: Santiago Bernabéu" value="<?php echo isset($_POST['estadio']) ? htmlspecialchars($_POST['estadio']) : ''; ?>">
+                placeholder="Ej: Santiago Bernabéu" 
+                value="<?php echo isset($_POST['estadio']) ? htmlspecialchars($_POST['estadio']) : ''; ?>"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
         </div>
 
-        <button type="submit">Crear Equipo</button>
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition">Crear Equipo</button>
     </form>
 </div>
 
-<div class="card">
-    <h3>Equipos Registrados (<?php echo count($equipos); ?>)</h3>
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h3 class="text-xl font-semibold text-gray-900 mb-4">Equipos Registrados (<?php echo count($equipos); ?>)</h3>
 
     <?php if (empty($equipos)): ?>
-        <p style="color: #999; padding: 20px; text-align: center;">No hay equipos registrados aún.</p>
+        <p class="text-gray-500 py-8 text-center">No hay equipos registrados aún.</p>
     <?php else: ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Estadio</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($equipos as $equipo): ?>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-100 border-b border-gray-200">
                     <tr>
-                        <td><strong><?php echo htmlspecialchars($equipo->getNombre()); ?></strong></td>
-                        <td><?php echo htmlspecialchars($equipo->getEstadio()); ?></td>
-                        <td>
-                            <a href="partidosEquipo.php?equipo_id=<?php echo $equipo->getId(); ?>" class="link">
-                                Ver Partidos
-                            </a>
-                        </td>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Nombre</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Estadio</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Acciones</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <?php foreach ($equipos as $equipo): ?>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4"><strong class="text-gray-900"><?php echo htmlspecialchars($equipo->getNombre()); ?></strong></td>
+                            <td class="px-6 py-4 text-gray-600"><?php echo htmlspecialchars($equipo->getEstadio()); ?></td>
+                            <td class="px-6 py-4">
+                                <a href="partidosEquipo.php?equipo_id=<?php echo $equipo->getId(); ?>" class="text-blue-600 hover:text-blue-800 font-medium transition">
+                                    Ver Partidos
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     <?php endif; ?>
 </div>
 

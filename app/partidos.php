@@ -77,119 +77,123 @@ $equipos = $equipoDAO->obtenerTodos();
 
 <?php include '../templates/layout_header.php'; ?>
 
-    <h2>Resultados de Partidos</h2>
-    
-    <?php if ($mensaje): ?>
-        <div class="alert alert-<?php echo $tipoMensaje; ?>">
-            <?php echo $mensaje; ?>
-        </div>
-    <?php endif; ?>
-    
-    <div class="card">
-        <h3>Filtrar por Jornada</h3>
-        <form method="GET" action="" style="display: flex; gap: 10px; align-items: flex-end;">
-            <div style="flex: 1; max-width: 300px;">
-                <label for="jornada">Jornada:</label>
-                <select id="jornada" name="jornada" onchange="this.form.submit()">
-                    <?php for ($i = 1; $i <= (max($jornadas) ?? 10); $i++): ?>
-                        <option value="<?php echo $i; ?>" <?php echo $i === $jornadaSeleccionada ? 'selected' : ''; ?>>
-                            Jornada <?php echo $i; ?>
-                        </option>
-                    <?php endfor; ?>
-                </select>
-            </div>
-        </form>
+<h2 class="text-3xl font-bold text-gray-900 mb-6">Resultados de Partidos</h2>
+
+<?php if ($mensaje): ?>
+    <div class="mb-6 p-4 rounded-lg <?php echo $tipoMensaje === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'; ?>">
+        <?php echo $mensaje; ?>
     </div>
+<?php endif; ?>
+
+<div class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Filtrar por Jornada</h3>
+    <form method="GET" action="" class="flex gap-4 items-end">
+        <div class="max-w-xs">
+            <label for="jornada" class="block text-sm font-medium text-gray-700 mb-2">Jornada:</label>
+            <select id="jornada" name="jornada" onchange="this.form.submit()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                <?php for ($i = 1; $i <= (max($jornadas) ?? 10); $i++): ?>
+                    <option value="<?php echo $i; ?>" <?php echo $i === $jornadaSeleccionada ? 'selected' : ''; ?>>
+                        Jornada <?php echo $i; ?>
+                    </option>
+                <?php endfor; ?>
+            </select>
+        </div>
+    </form>
+</div>
+
+<div class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Partidos Jornada <?php echo $jornadaSeleccionada; ?></h3>
     
-    <div class="card">
-        <h3>Partidos Jornada <?php echo $jornadaSeleccionada; ?></h3>
-        
-        <?php if (empty($partidos)): ?>
-            <p style="color: #999; padding: 20px; text-align: center;">No hay partidos en esta jornada.</p>
-        <?php else: ?>
-            <table>
-                <thead>
+    <?php if (empty($partidos)): ?>
+        <p class="text-gray-500 py-8 text-center">No hay partidos en esta jornada.</p>
+    <?php else: ?>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-100 border-b border-gray-200">
                     <tr>
-                        <th>Local</th>
-                        <th>Resultado</th>
-                        <th>Visitante</th>
-                        <th>Estadio Local</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Local</th>
+                        <th class="px-6 py-3 text-center text-sm font-semibold text-gray-900">Resultado</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Visitante</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Estadio Local</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-gray-200">
                     <?php foreach ($partidos as $partido): ?>
-                        <tr>
-                            <td>
-                                <strong><?php echo htmlspecialchars($partido->getEquipoLocal()->getNombre()); ?></strong>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4">
+                                <strong class="text-gray-900"><?php echo htmlspecialchars($partido->getEquipoLocal()->getNombre()); ?></strong>
                             </td>
-                            <td style="text-align: center; font-weight: bold; font-size: 16px;">
-                                <?php 
-                                    $resultado = $partido->getResultado();
-                                    $textoResultado = ($resultado === '1') ? 'Local' : (($resultado === '2') ? 'Visitante' : 'Empate');
-                                    echo $textoResultado . ' (' . $resultado . ')';
-                                ?>
+                            <td class="px-6 py-4 text-center">
+                                <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded font-semibold">
+                                    <?php 
+                                        $resultado = $partido->getResultado();
+                                        $textoResultado = ($resultado === '1') ? 'Local' : (($resultado === '2') ? 'Visitante' : 'Empate');
+                                        echo $textoResultado . ' (' . $resultado . ')';
+                                    ?>
+                                </span>
                             </td>
-                            <td>
-                                <strong><?php echo htmlspecialchars($partido->getEquipoVisitante()->getNombre()); ?></strong>
+                            <td class="px-6 py-4">
+                                <strong class="text-gray-900"><?php echo htmlspecialchars($partido->getEquipoVisitante()->getNombre()); ?></strong>
                             </td>
-                            <td><?php echo htmlspecialchars($partido->getEquipoLocal()->getEstadio()); ?></td>
+                            <td class="px-6 py-4 text-gray-600"><?php echo htmlspecialchars($partido->getEquipoLocal()->getEstadio()); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
-        <?php endif; ?>
-    </div>
-    
-    <div class="card">
-        <h3>Registrar Nuevo Partido</h3>
-        <form method="POST" action="">
-            <input type="hidden" name="action" value="crear">
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="form-group">
-                    <label for="equipo_local_id">Equipo Local *</label>
-                    <select id="equipo_local_id" name="equipo_local_id" required>
-                        <option value="">-- Selecciona un equipo --</option>
-                        <?php foreach ($equipos as $equipo): ?>
-                            <option value="<?php echo $equipo->getId(); ?>">
-                                <?php echo htmlspecialchars($equipo->getNombre()); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="equipo_visitante_id">Equipo Visitante *</label>
-                    <select id="equipo_visitante_id" name="equipo_visitante_id" required>
-                        <option value="">-- Selecciona un equipo --</option>
-                        <?php foreach ($equipos as $equipo): ?>
-                            <option value="<?php echo $equipo->getId(); ?>">
-                                <?php echo htmlspecialchars($equipo->getNombre()); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+        </div>
+    <?php endif; ?>
+</div>
+
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Registrar Nuevo Partido</h3>
+    <form method="POST" action="">
+        <input type="hidden" name="action" value="crear">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <label for="equipo_local_id" class="block text-sm font-medium text-gray-700 mb-2">Equipo Local *</label>
+                <select id="equipo_local_id" name="equipo_local_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                    <option value="">-- Selecciona un equipo --</option>
+                    <?php foreach ($equipos as $equipo): ?>
+                        <option value="<?php echo $equipo->getId(); ?>">
+                            <?php echo htmlspecialchars($equipo->getNombre()); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="form-group">
-                    <label for="resultado">Resultado *</label>
-                    <select id="resultado" name="resultado" required>
-                        <option value="">-- Selecciona resultado --</option>
-                        <option value="1">1 - Gana Local</option>
-                        <option value="X">X - Empate</option>
-                        <option value="2">2 - Gana Visitante</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="jornada_nueva">Jornada *</label>
-                    <input type="number" id="jornada_nueva" name="jornada" min="1" max="50" required value="<?php echo $jornadaSeleccionada; ?>">
-                </div>
+            <div>
+                <label for="equipo_visitante_id" class="block text-sm font-medium text-gray-700 mb-2">Equipo Visitante *</label>
+                <select id="equipo_visitante_id" name="equipo_visitante_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                    <option value="">-- Selecciona un equipo --</option>
+                    <?php foreach ($equipos as $equipo): ?>
+                        <option value="<?php echo $equipo->getId(); ?>">
+                            <?php echo htmlspecialchars($equipo->getNombre()); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <label for="resultado" class="block text-sm font-medium text-gray-700 mb-2">Resultado *</label>
+                <select id="resultado" name="resultado" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                    <option value="">-- Selecciona resultado --</option>
+                    <option value="1">1 - Gana Local</option>
+                    <option value="X">X - Empate</option>
+                    <option value="2">2 - Gana Visitante</option>
+                </select>
             </div>
             
-            <button type="submit">Registrar Partido</button>
-        </form>
-    </div>
+            <div>
+                <label for="jornada_nueva" class="block text-sm font-medium text-gray-700 mb-2">Jornada *</label>
+                <input type="number" id="jornada_nueva" name="jornada" min="1" max="50" required value="<?php echo $jornadaSeleccionada; ?>" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+            </div>
+        </div>
+        
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition">Registrar Partido</button>
+    </form>
+</div>
 
 <?php include '../templates/layout_footer.php'; ?>
